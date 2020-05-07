@@ -1,0 +1,7 @@
+source:
+  git:
+    url: https://github.com/JasonMorgan/spring-petclinic # Use a valid github repo, ideally your own fork of petclinic
+    revision: master
+build:
+image: 
+  tag: jasonmorgan/pbpetclinic # Use a valid docker registry path, this one uses docker hub

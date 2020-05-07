@@ -1,0 +1,5 @@
+name: build-service-credentials
+credentials:
+  - name: kube_config
+    source:
+      path: "/home/MY-USERNAME/.kube/config"
