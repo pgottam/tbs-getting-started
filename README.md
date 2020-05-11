@@ -10,3 +10,5 @@ Go from a blank kubernetes cluster to an environment running Tanzu Build Service
   * Assumes docker hub
 * duffle installed
 * The pb cli
+* a k8s cluster
+  * with a default storage class configured
