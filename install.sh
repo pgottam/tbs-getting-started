@@ -32,13 +32,3 @@ duffle install BUILD-SERVICE-INSTALLATION-NAME -c /tmp/credentials.yml  \
 pb stack status
 pb store list
 pb builer list
-
-## Go find the latest run and build images
-### Browse to https://registry.pivotal.io
-### Go pull the latest image for registry.pivotal.io/tbs-dependencies/run and registry.pivotal.io/tbs-dependencies/build
-#### Ex:
-# docker pull registry.pivotal.io/tbs-dependencies/run:1586272925
-# docker pull registry.pivotal.io/tbs-dependencies/build:1586272925
-
-## Stack update
-pb stack update --build-image registry.pivotal.io/tbs-dependencies/build:1586272925 --run-image registry.pivotal.io/tbs-dependencies/run:1586272925
