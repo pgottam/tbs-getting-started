@@ -38,7 +38,7 @@ docker run -it --rm -p 8080:8080 jasonmorgan/pbpetclinic
 
 ## STACK Update
 
-pb stack update --build-image index.docker.io/cloudfoundry/build:0.0.40-full-cnb --run-image index.docker.io/cloudfoundry/run:0.0.40-full-cnb
+pb stack update --build-image registry.pivotal.io/tbs-dependencies/build:1586272925 --run-image registry.pivotal.io/tbs-dependencies/run:1586272925
 watch pb image builds index.docker.io/techgnosis/mysql
 pb image logs index.docker.io/techgnosis/mysql -b 4 -f
 
@@ -56,16 +56,3 @@ docker inspect jasonmorgan/pbpetclinic | jq '.[].Config.Labels."io.buildpacks.li
 
 ## Run 
   
-Config
-  Labels
-    io.buildpacks.lifecycle.metadata
-    io.buildpacks.build.metadata
-    io.buildpacks.project.metadata
-    io.buildpacks.stack.id
- 
-
-helm install rancher rancher-stable/rancher \
-  --namespace cattle-system \
-  --set hostname=rancher.59s.io \
-  --set ingress.tls.source=letsEncrypt \
-  --set letsEncrypt.email=jmorgan@f9vs.com
