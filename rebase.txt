@@ -1,0 +1,6 @@
+[rebase] *** Images (sha256:e567b00b5749e6bb416d5fab6743baf3ffca8a9f235cb9d078e860d44089a1be):
+[rebase]       index.docker.io/jasonmorgan/pbpetclinic:latest
+[rebase]       index.docker.io/jasonmorgan/pbpetclinic:b3.20200512.142207
+[rebase]
+[rebase] *** Digest: sha256:e567b00b5749e6bb416d5fab6743baf3ffca8a9f235cb9d078e860d44089a1be
+[rebase]

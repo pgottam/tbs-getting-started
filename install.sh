@@ -13,7 +13,7 @@ sudo mv duffle /usr/local/bin/
 # We now use duffle to unpack the archive and move the images into our registry
 docker login IMAGE-REGISTRY # This is where we login to whatever our target registry is
 
-duffle relocate -f /tmp/build-service-${version}.tgz -m /tmp/relocated.json -p IMAGE-REGISTRY
+duffle relocate -f /tmp/build-service-${version}.tgz -m /tmp/relocated.json -p IMAGE-REGISTRY/PREFIX
 
 
 # /mnt/c/Users/jmorg/
