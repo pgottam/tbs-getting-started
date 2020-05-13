@@ -6,6 +6,7 @@ Go from a blank kubernetes cluster to an environment running Tanzu Build Service
 
 * A github or similar account
   * Public facing is assumed
+  * A fork of spring-petclinic
 * A docker hub or similar registry available
   * Assumes docker hub
 * duffle installed
