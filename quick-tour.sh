@@ -51,7 +51,7 @@ clear
 
 
 pe "docker pull jasonmorgan/pbpetclinic"
-pe "docker run -it --rm -p 8080:8080 jasonmorgan/pbpetclinic"
+pe "kubectl apply -f spring-deployment"
 wait
 clear
 
@@ -69,7 +69,7 @@ cmd
 ## New tab
 
 pe "docker pull jasonmorgan/pbpetclinic"
-pe "docker run -it --rm -p 8080:8080 jasonmorgan/pbpetclinic"
+pe "kubectl rollout restart deployment petclinic-deployment"
 
 wait
 clear
