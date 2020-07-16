@@ -13,3 +13,14 @@ Go from a blank kubernetes cluster to an environment running Tanzu Build Service
 * The pb cli
 * a k8s cluster
   * with a default storage class configured
+
+## Getting the repo ready
+
+* Fill out the values for your instance by editing vars.json
+  * Explain values here
+* Run the templating script
+* Profit
+
+## Using the demos
+
+Once you've run the templating script your repo will be approriately configured for use. Test out the install and demo scripts then get started.

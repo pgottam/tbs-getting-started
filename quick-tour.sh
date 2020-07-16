@@ -42,17 +42,15 @@ clear
 pe "pb image apply -f image.yaml"
 
 pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic -b 1 -f"
-wait
+cmd
 clear
 
 pe "pb image build index.docker.io/jasonmorgan/pbpetclinic -b 1"
 wait
 clear
 
-
-pe "docker pull jasonmorgan/pbpetclinic"
-pe "kubectl apply -f spring-deployment"
-wait
+pe "kubectl apply -f spring-deploy.yaml -n default"
+cmd
 clear
 
 ## New tab
@@ -68,8 +66,7 @@ clear
 cmd
 ## New tab
 
-pe "docker pull jasonmorgan/pbpetclinic"
-pe "kubectl rollout restart deployment petclinic-deployment"
+pe "kubectl rollout restart deployment petclinic-deployment -n default"
 
 wait
 clear
@@ -95,6 +92,7 @@ pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic:latest -b 4 -f"
 cmd
 
 p "Here we can dive into the additional data provided by Cloud Native Buildpacks and TBS"
+pe "docker pull jasonmorgan/pbpetclinic"
 pe "docker inspect jasonmorgan/pbpetclinic | less"
 wait
 clear

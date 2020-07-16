@@ -1,0 +1,12 @@
+{
+  "dockerhub_username": "",
+  "dockerhub_password": "",
+  "github_username": "",
+  "tbs_install_name": "",
+  "tbs_project_name": "",
+  "tbs_archive_name": "build-service-0.1.0.tgz",
+  "kubenetes_cluster_name": "",
+  "kubeconfig_path": "",
+  "build_stervice_name": "",
+  "local_petclinic_path": ""
+}
