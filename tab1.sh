@@ -4,36 +4,36 @@ clear
 ## Assumes TBS is installed and ready to be configured
 
 p "Let's take a tour around the TBS cli and objects"
-pe "pb stack status"
+pe "kp stack list"
 pe "kubectl get stack --all-namespaces"
 wait
 clear
 
-pe "pb store list"
+pe "kp store list"
 wait
 clear
 pe "kubectl get store --all-namespaces"
 wait
 clear
 
-pe "pb builder list"
+pe "kp custom-cluster-builder list"
 pe "kubectl get CustomClusterBuilder,CustomBuilder --all-namespaces"
 wait
 clear
 
-p "pb project create 59s-prod"
-pb project create 59s-prod > /dev/null 2>&1
+p "kp project create 59s-prod"
+kp project create 59s-prod > /dev/null 2>&1
 cat create-project-output.txt
 echo ""
-pe "pb project list"
+pe "kp project list"
 pe "kubectl get project"
-pe "pb project target 59s-prod"
+pe "kp project target 59s-prod"
 wait
 clear
 
 p "now that we have our project we can start on creating an image"
 
-pe "pb secrets registry apply -f .priv/reg-creds.yaml"
+pe "kp secrets registry apply -f .priv/reg-creds.yaml"
 pe "vim registry-creds.yaml"
 clear
 
@@ -41,14 +41,14 @@ pe "vim image.yaml"
 wait
 clear
 
-pe "pb image apply -f image.yaml"
+pe "kp image apply -f image.yaml"
 
 ### Doesn't stream output Need to fix
-pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic -b 1 -f"
+pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 1 -f"
 wait
 clear
 
-pe "pb image build index.docker.io/jasonmorgan/pbpetclinic -b 1"
+pe "kp image build index.docker.io/jasonmorgan/pbpetclinic -b 1"
 wait
 clear
 
@@ -67,7 +67,7 @@ p "Let's modify pet clinic"
 
 ## Commit
 
-pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic -b 2 -f"
+pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 2 -f"
 wait
 clear
 cmd
@@ -89,14 +89,14 @@ clear
 
 p "Now that we've done an update to the code let's see what updating the base image looks like"
 pe "docker login  registry.pivotal.io"
-pe "pb stack update --build-image registry.pivotal.io/tbs-dependencies/build:1586272925 --run-image registry.pivotal.io/tbs-dependencies/run:1586272925"
-pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic -b 3 -f"
+pe "kp stack update --build-image registry.pivotal.io/tbs-dependencies/build:1586272925 --run-image registry.pivotal.io/tbs-dependencies/run:1586272925"
+pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 3 -f"
 cmd
 ### Trigger Build
 
 p "We can also manually trigger a build at anytime"
-pe "pb image trigger index.docker.io/jasonmorgan/pbpetclinic:latest"
-pe "pb image logs index.docker.io/jasonmorgan/pbpetclinic:latest -b 4 -f"
+pe "kp image trigger index.docker.io/jasonmorgan/pbpetclinic:latest"
+pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic:latest -b 4 -f"
 cmd
 
 p "Here we can dive into the additional data provided by Cloud Native Buildpacks and TBS"
