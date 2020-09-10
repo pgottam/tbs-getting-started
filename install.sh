@@ -1,34 +1,20 @@
 #!/bin/bash
 
 ## Check on the StorageClass
-`k get sc`
-`k apply -f .priv/storage-class-aws.yml`
+# `k get sc`
+# `k apply -f .priv/storage-class-aws.yml`
 
-## Install duffle
-curl -Lo duffle https://github.com/cnabio/duffle/releases/download/0.3.5-beta.1/duffle-$(uname)-amd64
-chmod +x ./duffle
-sudo mv duffle /usr/local/bin/
+docker login registry.pivotal.io
 
-## Duffle Relocate
-# We now use duffle to unpack the archive and move the images into our registry
-docker login IMAGE-REGISTRY # This is where we login to whatever our target registry is
+kbld relocate -f /tmp/images.lock --lock-output /tmp/images-relocated.lock --repository <your-repository>
 
-duffle relocate -f /tmp/build-service-${version}.tgz -m /tmp/relocated.json -p IMAGE-REGISTRY/PREFIX
+ytt -f /tmp/values.yaml \
+    -f /tmp/manifests/ \
+    -v docker_repository="your-docker-repo" \
+    -v docker_username="your-docker-username" \
+    -v docker_password='your-docker-password' \
+    | kbld -f /tmp/images-relocated.lock -f- \
+    | kapp deploy -a tanzu-build-service -f- -y
 
+kp import -f .priv/descriptor-7.yaml
 
-# /mnt/c/Users/jmorg/
-duffle install BUILD-SERVICE-INSTALLATION-NAME -c /tmp/credentials.yml  \
-    --set kubernetes_env=CLUSTER-NAME \
-    --set docker_registry=DOCKER-REGISTRY \
-    --set docker_repository=DOCKER-REPOSITORY \
-    --set registry_username="REGISTRY-USERNAME" \
-    --set registry_password="REGISTRY-PASSWORD" \
-    --set custom_builder_image="BUILDER-IMAGE-TAG" \
-    -f /tmp/build-service-${version}.tgz \
-    -m /tmp/relocated.json
-
-## Start messing with TBS
-
-pb stack status
-pb store list
-pb builer list
