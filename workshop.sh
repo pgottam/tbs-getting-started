@@ -6,11 +6,16 @@ clear
 
 p "Let's start by creating an image. At this point we have TBS installed and docker hub registry credentials configured."
 
-pe "kp image create petclinic --tag jasonmorgan/petclinic --git https://github.com/JasonMorgan/spring-petclinic --git-revision main -w"
+pe "kp image create petclinic --tag jasonmorgan/petclinic --git https://github.com/JasonMorgan/spring-petclinic --git-revision main"
+p "in the above command we created a new image object in tbs using the imperative kp command line."
+p "we named our image petclinic, set the image tag for our image repository, provided the git url, and decided what branch or commit id to build. When using a branch name TBS will always build the latest commit from that branch."
+pe "kp build logs petclinic -b 1"
+wait
+clear
 
 p "Let's deploy our app to k8s"
-pe "bat -l yaml spring-deploy.yaml"
 pe "kubectl apply -f spring-deploy.yaml"
+pe "bat -l yaml spring-deploy.yaml"
 
 pe "docker pull jasonmorgan/petclinic"
 pe "docker run -it --rm -p 8080:8080 jasonmorgan/petclinic"
@@ -18,7 +23,7 @@ wait
 clear
 
 ## Change to tonka in other tab
-p "Let's modify pet clinic"
+p "Let's modify pet clinic in another tab. This will cause TBS to rebuild the petclinic image using our later commit ID"
 
 ## Commit
 ## Need to watch for builds
