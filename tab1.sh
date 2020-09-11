@@ -58,3 +58,5 @@ clear
 pe "docker inspect jasonmorgan/petclinic | jq '.[].Config.Labels.\"io.buildpacks.lifecycle.metadata\" | fromjson | .buildpacks'"
 wait
 clear
+
+## We're going to use pack inspect next to checkout the BOM for a given image
