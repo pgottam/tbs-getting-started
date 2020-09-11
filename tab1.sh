@@ -1,115 +1,60 @@
 #!/bin/bash
 . demo-magic.sh
 clear
-## Assumes TBS is installed and ready to be configured
 
-p "Let's take a tour around the TBS cli and objects"
-pe "kp stack list"
-pe "kubectl get stack --all-namespaces"
+# kp image create go-app --tag jasonmorgan/go-app --git https://github.com/techgnosis/tanzu-golang.git --git-revision master > /dev/null 2>&1 || true
+
+p "Let's start by creating an image. At this point we have TBS installed and docker hub registry credentials configured."
+
+pe "kp image create petclinic --tag jasonmorgan/petclinic --git https://github.com/JasonMorgan/spring-petclinic --git-revision main"
+p "in the above command we created a new image object in tbs using the imperative kp command line."
+p "we named our image petclinic, set the image tag for our image repository, provided the git url, and decided what branch or commit id to build. When using a branch name TBS will always build the latest commit from that branch."
+pe "kp build logs petclinic -b 1"
 wait
 clear
 
-pe "kp store list"
+p "Let's deploy our app to k8s"
+pe "kubectl apply -f spring-deploy.yaml"
+pe "bat -l yaml spring-deploy.yaml"
+
+pe "docker pull jasonmorgan/petclinic"
+pe "docker run -it --rm -p 8080:8080 jasonmorgan/petclinic"
 wait
 clear
-pe "kubectl get store --all-namespaces"
-wait
-clear
-
-pe "kp custom-cluster-builder list"
-pe "kubectl get CustomClusterBuilder,CustomBuilder --all-namespaces"
-wait
-clear
-
-p "kp project create 59s-prod"
-kp project create 59s-prod > /dev/null 2>&1
-cat create-project-output.txt
-echo ""
-pe "kp project list"
-pe "kubectl get project"
-pe "kp project target 59s-prod"
-wait
-clear
-
-p "now that we have our project we can start on creating an image"
-
-pe "kp secrets registry apply -f .priv/reg-creds.yaml"
-pe "vim registry-creds.yaml"
-clear
-
-pe "vim image.yaml"
-wait
-clear
-
-pe "kp image apply -f image.yaml"
-
-### Doesn't stream output Need to fix
-pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 1 -f"
-wait
-clear
-
-pe "kp image build index.docker.io/jasonmorgan/pbpetclinic -b 1"
-wait
-clear
-
-
-pe "docker pull jasonmorgan/pbpetclinic"
-pe "docker run -it --rm -p 8080:8080 jasonmorgan/pbpetclinic"
-wait
-clear
-
-
-
-## New tab
 
 ## Change to tonka in other tab
-p "Let's modify pet clinic"
+p "Let's modify pet clinic in another tab. This will cause TBS to rebuild the petclinic image using our later commit ID"
 
 ## Commit
+## Need to watch for builds
 
-pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 2 -f"
+pe "watch kp build list petclinic"
+pe "kp build logs petclinic -b 2"
+p "Now we can update our k8s deployment"
+pe "kubectl rollout restart deployment petclinic-deployment -n default"
 wait
 clear
-cmd
 ## New tab
 
-pe "docker pull jasonmorgan/pbpetclinic"
-pe "docker run -it --rm -p 8080:8080 jasonmorgan/pbpetclinic"
-
-wait
-clear
 ## STACK Update
 
-## Go find the latest run and build images
-### Browse to https://registry.pivotal.io
-### Go pull the latest image for registry.pivotal.io/tbs-dependencies/run and registry.pivotal.io/tbs-dependencies/build
-#### Ex:
-# docker pull registry.pivotal.io/tbs-dependencies/run:1586272925
-# docker pull registry.pivotal.io/tbs-dependencies/build:1586272925
-
-p "Now that we've done an update to the code let's see what updating the base image looks like"
-pe "docker login  registry.pivotal.io"
-pe "kp stack update --build-image registry.pivotal.io/tbs-dependencies/build:1586272925 --run-image registry.pivotal.io/tbs-dependencies/run:1586272925"
-pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic -b 3 -f"
-cmd
-### Trigger Build
-
-p "We can also manually trigger a build at anytime"
-pe "kp image trigger index.docker.io/jasonmorgan/pbpetclinic:latest"
-pe "kp image logs index.docker.io/jasonmorgan/pbpetclinic:latest -b 4 -f"
-cmd
+pe "kp import -f .priv/descriptor-8.yaml"
+wait 
+clear
+pe "kp import -f .priv/descriptor-9.yaml"
+wait 
+clear
 
 p "Here we can dive into the additional data provided by Cloud Native Buildpacks and TBS"
-pe "docker inspect jasonmorgan/pbpetclinic | less"
+pe "docker inspect alpine | bat -l json"
+pe "docker inspect jasonmorgan/petclinic |  bat -l json"
 wait
 clear
 
-
-pe "docker inspect jasonmorgan/pbpetclinic | jq '.[].Config.Labels.\"io.buildpacks.project.metadata\" | fromjson'"
+pe "docker inspect jasonmorgan/petclinic | jq '.[].Config.Labels.\"io.buildpacks.project.metadata\" | fromjson'"
 wait
 clear
 
-
-pe "docker inspect jasonmorgan/pbpetclinic | jq '.[].Config.Labels.\"io.buildpacks.lifecycle.metadata\" | fromjson | .buildpacks'"
+pe "docker inspect jasonmorgan/petclinic | jq '.[].Config.Labels.\"io.buildpacks.lifecycle.metadata\" | fromjson | .buildpacks'"
 wait
 clear
