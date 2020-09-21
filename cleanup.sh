@@ -9,3 +9,5 @@ ytt -f /tmp/values.yaml \
     | kapp delete -a tanzu-build-service -y
 
 kubens default
+
+kubectl delete -f spring-deploy.yaml
