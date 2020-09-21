@@ -47,8 +47,8 @@ clear
 ## Commit
 ## Need to watch for builds
 
-pe "watch kp build list petclinic"
-clear
+# pe "watch kp build list petclinic"
+# clear
 pe "kp build logs petclinic -b 2"
 wait
 clear
