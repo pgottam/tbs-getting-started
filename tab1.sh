@@ -76,6 +76,7 @@ clear
 p "Here we can dive into the additional data provided by Cloud Native Buildpacks and TBS"
 clear
 pe "docker inspect alpine | bat -l json"
+wait
 clear
 pe "docker inspect rjmo/petclinic |  bat -l json"
 wait
@@ -86,6 +87,10 @@ wait
 clear
 
 pe "docker inspect rjmo/petclinic | jq '.[].Config.Labels.\"io.buildpacks.lifecycle.metadata\" | fromjson | .buildpacks'"
+wait
+clear
+
+pe "pack inspect-image jasonmorgan/petclinic --bom | jq '.' | less"
 wait
 clear
 
