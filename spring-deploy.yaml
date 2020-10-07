@@ -18,7 +18,7 @@ spec:
       containers:
       - name: petclinic
         imagePullPolicy: Always
-        image: rjmo/petclinic:latest
+        image: harbor.pgottam-demo.live/demobuild/minions-pc:latest
         ports:
         - containerPort: 8080
         resources:
@@ -28,24 +28,6 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 3
-          periodSeconds: 6
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 6
-        startupProbe:
-          httpGet:
-            path: /
-            port: 8080
-          failureThreshold: 30
-          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -58,26 +40,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: ClusterIP
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      ingress.kubernetes.io/force-ssl-redirect: "true"
-      kubernetes.io/ingress.class: contour
-      kubernetes.io/tls-acme: "true"
-  name: ingress-petclinic
-spec:
-    rules:
-    - host: petclinic.59s.io
-      http:
-        paths:
-        - backend:
-            serviceName: pb-frontend
-            servicePort: 80
-    tls:
-    - hosts:
-      - petclinic.59s.io
-      secretName: petclinic
+  type: LoadBalancer
